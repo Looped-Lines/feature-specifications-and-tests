@@ -1,14 +1,8 @@
-const
-    glob         = require('glob'),
-    protractor   = require.resolve('protractor'),
-    node_modules = protractor.substring(0, protractor.lastIndexOf('node_modules') + 'node_modules'.length),
-    seleniumJar  = glob.sync(`${node_modules}/protractor/**/selenium-server-standalone-*.jar`).pop();
-
 exports.config = {
 
-    baseUrl: 'http://127.0.0.1:8080/application',
+    baseUrl: 'http://127.0.0.1:8080/',
 
-    seleniumServerJar: seleniumJar,
+    seleniumServerJar: 'node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.0.1.jar',
 
     // https://github.com/angular/protractor/blob/master/docs/timeouts.md
     allScriptsTimeout: 110000,
@@ -23,8 +17,12 @@ exports.config = {
 
     specs: [ 'features/**/*.feature' ],
 
+    onPrepare: () =>  {
+        browser.waitForAngularEnabled(false);
+    },
+
     cucumberOpts: {
-        require:    [ 'features/**/*.ts' ],
+        require:    [ 'features/**/*.ts'],
         format:     'pretty',
         compiler:   'ts:ts-node/register'
     },
